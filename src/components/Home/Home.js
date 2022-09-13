@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import axios from 'axios';
 
 function Home() {
-  const BASE_URL = 'https://api.steamapis.com/market/apps?api_key=LFyzRdj4kWo2O3zYNsKMqRfYIOw'
+  const BASE_URL = `https://api.steamapis.com/market/apps?api_key=${process.env.REACT_APP_STEAM_KEY}`
 
   let data = []
 

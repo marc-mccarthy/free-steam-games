@@ -1,27 +1,41 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { Page } from './Home.styles'
 
 function Home() {
-  const BASE_URL = `https://api.steamapis.com/market/apps?api_key=${process.env.REACT_APP_STEAM_KEY}`
+  const APPS_URL = `https://api.steamapis.com/market/apps?api_key=${process.env.REACT_APP_STEAM_KEY}`
 
-  let data = []
-
-  const getGames = async () => {
-    data = await axios.get(BASE_URL);
-    return data;
-  }
+  const [games, setGames] = useState([]);
 
   useEffect(() => {
+    const getGames = async () => {
+      try {
+        const games = await axios.get(APPS_URL);
+        setGames(games.data);
+      } catch (err) {
+        console.log('Error occured when fetching free games');
+      }
+    };
     getGames();
-  },[])
+  }, []);
 
   return (
-    <div>
-      <h1>Games</h1>
-      {JSON.stringify(data)}
-      <ul>
-      </ul>
-    </div>
+    <Page>
+      {games.length === 0 ? (
+        <h3>Loading Games...</h3>
+      ) : (
+        <>
+          <h2>Free Steam Games</h2>
+          <ul>
+            {games.filter((game) => game.is_free).map((game, index) => {
+              return (
+                <li>{game.name}</li>
+              )
+            })}
+          </ul>
+        </>
+      )}
+    </Page>
   );
 }
 
